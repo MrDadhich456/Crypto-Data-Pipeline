@@ -6,7 +6,7 @@ import time
 
 # --- CONFIGURATION ---
 FILE_PATH = "data/crypto_prices.csv"
-url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd"
+url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=inr"
 
 # 1. Setup the CSV File (Write Headers if file is new)
 # Check if file exists, if not, create it with headers
@@ -27,9 +27,9 @@ while True:
             data = response.json()
             
             # Extract
-            btc = data["bitcoin"]["usd"]
-            eth = data["ethereum"]["usd"]
-            sol = data["solana"]["usd"]
+            btc = data["bitcoin"]["inr"]
+            eth = data["ethereum"]["inr"]
+            sol = data["solana"]["inr"]
             now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             # Save to CSV (Append Mode 'a')
@@ -37,7 +37,7 @@ while True:
                 writer = csv.writer(file)
                 writer.writerow([now, btc, eth, sol])
             
-            print(f"✅ Saved at {now}: BTC=${btc}")
+            print(f"✅ Saved at {now}: BTC=INR{btc}")
         else:
             print(f"⚠️ API Error: {response.status_code}")
 
