@@ -62,5 +62,5 @@ while True:
     except Exception as e:
         print(f"❌ Error: {e}")
 
-    # Wait 60 seconds
-    time.sleep(60)
+    # Wait 30 seconds
+    time.sleep(30)
