@@ -13,8 +13,8 @@ if [ ! "$(docker ps -q -f name=my_postgres)" ]; then
     else
         echo "🐘 Creating NEW Database Container..."
         docker run --name my_postgres -e POSTGRES_PASSWORD=1234 -p 5432:5432 -d postgres
-        echo "⏳ Waiting 5 seconds for DB to initialize..."
-        sleep 5
+        echo "⏳ Waiting 10 seconds for DB to initialize..."
+        sleep 10
     fi
 else
     echo "✅ Database is already running."
