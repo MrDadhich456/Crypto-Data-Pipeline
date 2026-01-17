@@ -72,7 +72,8 @@ while True:
         st.metric(label=f"{selected_coin} Price", value=f"₹{latest_price:,.2f}")
         
         # Display Chart for the SELECTED column
-        # _____ Write code here _____
+        st.line_chart(data=df[selected_column])
+        
         
     # D. Refresh Rate
     time.sleep(2)
