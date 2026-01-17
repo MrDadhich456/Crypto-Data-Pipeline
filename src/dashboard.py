@@ -66,14 +66,14 @@ while True:
     with placeholder.container():
         # Get the latest price for the SELECTED column
         # Hint: Use df[selected_column] instead of df["bitcoin_inr"]
-        latest_price = df[selected_column]
+        latest_price = df[selected_column].iloc[-1]
         
         # Display Metric
         st.metric(label=f"{selected_coin} Price", value=f"₹{latest_price:,.2f}")
         
         # Display Chart for the SELECTED column
         st.line_chart(data=df[selected_column])
-        
+
         
     # D. Refresh Rate
     time.sleep(2)
