@@ -1,54 +1,78 @@
+# 1. IMPORT LIBRARIES
 import streamlit as st
 import pandas as pd
 import psycopg2
 import time
 
-# --- CONFIGURATION ---
-st.set_page_config(page_title="Crypto Live Dashboard", page_icon="📈")
+# 2. PAGE CONFIGURATION
+st.set_page_config(page_title="Crypto V2", page_icon="🧪")
 
-# Database Connection Details
+# 3. DATABASE VARIABLES
 DB_HOST = "localhost"
 DB_NAME = "postgres"
 DB_USER = "postgres"
 DB_PASS = "1234"
 
-# Function to fetch data from Postgres
+# 4. FUNCTION: load_data()
 def load_data():
+    # A. Connect to Database (FILL THIS IN)
+    # Hint: Use psycopg2.connect(...)
     conn = psycopg2.connect(
         host=DB_HOST,
         database=DB_NAME,
         user=DB_USER,
         password=DB_PASS
     )
-    # Read SQL directly into a Pandas DataFrame!
-    query = "SELECT timestamp, bitcoin_inr FROM crypto_prices ORDER BY timestamp ASC"
+    
+    # B. Write the Query to get ALL data
+    query = "SELECT timestamp, bitcoin_inr, ethereum_inr, solana_inr FROM crypto_prices ORDER BY timestamp ASC"
+    
+    # C. Read into DataFrame
     df = pd.read_sql(query, conn)
+    
     conn.close()
     return df
 
-# --- THE UI ---
-st.title("💰 Real-Time Bitcoin Tracker")
-st.write("Live data fetched from CoinGecko -> Docker -> Postgres")
+# 5. UI SETUP - SIDEBAR (The New Feature!)
+st.title("🧪 Project Bit-Stream V2")
 
-# Create a placeholder for the chart
+# A. Create a Sidebar Selector
+# Hint: Use st.sidebar.selectbox("Label", ["Option1", "Option2", ...])
+selected_coin = st.sidebar.selectbox("select currency",["Bitcoin", "Ethereum", "Solana"])
+
+# B. Map the readable name to the database column name
+# (e.g., "Bitcoin" -> "bitcoin_inr")
+column_map = {
+    "Bitcoin":"bitcoin_inr",
+    "Ethereum":"ethereum_inr",
+    "Solana":"solana_inr"
+    }
+
+# Get the actual column name to use in the chart
+selected_column = column_map[selected_coin]
+
+# 6. PLACEHOLDER
 placeholder = st.empty()
 
-# The Infinite Loop (Auto-Refresh)
+# 7. THE INFINITE LOOP
 while True:
-    # 1. Get new data
+    # A. Load Data
     df = load_data()
     
-    # 2. Set the Index to Timestamp (required for charts)
+    # B. Set Index
     df = df.set_index("timestamp")
     
-    # 3. Draw the Chart inside the placeholder
+    # C. Display inside the placeholder
     with placeholder.container():
-        # Show the latest price in big text
-        latest_price = df["bitcoin_inr"].iloc[-1]
-        st.metric(label="Bitcoin Price (INR)", value=f"₹{latest_price:,.2f}")
+        # Get the latest price for the SELECTED column
+        # Hint: Use df[selected_column] instead of df["bitcoin_inr"]
+        latest_price = df[selected_column]
         
-        # Show the graph
-        st.line_chart(df["bitcoin_inr"])
+        # Display Metric
+        st.metric(label=f"{selected_coin} Price", value=f"₹{latest_price:,.2f}")
         
-    # 4. Refresh every 10 seconds
-    time.sleep(10)
+        # Display Chart for the SELECTED column
+        # _____ Write code here _____
+        
+    # D. Refresh Rate
+    time.sleep(2)
